@@ -1,0 +1,7 @@
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\bin\Debug\AdventOfCode2022.exe.config
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\bin\Debug\AdventOfCode2022.exe
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\bin\Debug\AdventOfCode2022.pdb
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\obj\Debug\AdventOfCode2022.csproj.AssemblyReference.cache
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\obj\Debug\AdventOfCode2022.csproj.CoreCompileInputs.cache
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\obj\Debug\AdventOfCode2022.exe
+C:\Development\Aesthetician Labs\AdventOfCode2022\AdventOfCode2022\obj\Debug\AdventOfCode2022.pdb
