@@ -9,7 +9,6 @@ namespace AdventOfCode2022
 {
 	static class CalorieCounter
 	{
-
 		public static string inputFile = "calories.txt";
 
 		public static void CountCalories()
