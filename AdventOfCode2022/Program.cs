@@ -41,6 +41,17 @@ namespace AdventOfCode2022
 							RockPaperScissors.RunStrategyGuide();
 							RockPaperScissors.RunStrategyGuideCalculate();
 							break;
+						case 3:
+							Console.WriteLine("Day 3: Rucksacks. Running Now!");
+							Rucksacks.GetPriorities();
+							Rucksacks.GetBadgePriorities();
+							break;
+
+						case 4:
+							Console.WriteLine("Day 4: Pairs. Running Now!");
+							ContainedPairs.GetContainedPairs();
+							ContainedPairs.GetOverlappedPairs();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;

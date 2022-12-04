@@ -44,9 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalorieCounter.cs" />
+    <Compile Include="ContainedPairs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RockPaperScissors.cs" />
+    <Compile Include="Rucksacks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
