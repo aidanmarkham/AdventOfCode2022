@@ -52,6 +52,11 @@ namespace AdventOfCode2022
 							ContainedPairs.GetContainedPairs();
 							ContainedPairs.GetOverlappedPairs();
 							break;
+						case 5:
+							Console.WriteLine("Day 5: Stacks. Running Now!");
+							CrateStacks.GetStackList();
+							CrateStacks.GetStackomaticList();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
