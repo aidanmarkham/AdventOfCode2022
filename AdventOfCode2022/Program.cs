@@ -57,6 +57,10 @@ namespace AdventOfCode2022
 							CrateStacks.GetStackList();
 							CrateStacks.GetStackomaticList();
 							break;
+						case 6:
+							Console.WriteLine("Day 6: Data Stream. Running Now!");
+							DataStream.FindMarker();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
