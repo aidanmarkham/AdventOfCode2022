@@ -61,6 +61,11 @@ namespace AdventOfCode2022
 							Console.WriteLine("Day 6: Data Stream. Running Now!");
 							DataStream.FindMarker();
 							break;
+						case 7:
+							Console.WriteLine("Day 7: File System. Running Now!");
+							FileSystem.DiskCheck();
+							FileSystem.SpaceFinder();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
