@@ -66,6 +66,10 @@ namespace AdventOfCode2022
 							FileSystem.DiskCheck();
 							FileSystem.SpaceFinder();
 							break;
+						case 8:
+							Console.WriteLine("Day 8: Trees. Running Now!");
+							TreeVisibility.CalculateVisibility();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
