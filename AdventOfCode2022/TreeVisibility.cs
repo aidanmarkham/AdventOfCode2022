@@ -21,7 +21,7 @@ namespace AdventOfCode2022
 			var width = input[0].Length;
 
 			int[,] trees = new int[height, width];
-
+			bool[,] visibleTrees = new bool[height, width];
 			for (int i = 0; i < input.Length; i++)
 			{
 				for (int j = 0; j < input[i].Length; j++)
@@ -29,8 +29,6 @@ namespace AdventOfCode2022
 					trees[i, j] = int.Parse("" + input[i][j]);
 				}
 			}
-
-			List<string> visibleTrees = new List<string>();
 
 			// for each horizontal row 
 			for (int y = 0; y < height; y++)
@@ -41,18 +39,8 @@ namespace AdventOfCode2022
 				{
 					if (trees[y, x] > currentHeight)
 					{
-						if (!visibleTrees.Contains("Tree " + y + x))
-						{
-							visibleTrees.Add("Tree " + y + x);
-							Console.WriteLine("Tree " + y + ", " + x + " is visible");
-						}
-
-						//Console.WriteLine("Tree " + y + ", " + x + " is visible from the left. Total: " + visibleTrees.Count);
+						visibleTrees[y, x] = true;
 						currentHeight = trees[y, x];
-					}
-					else
-					{
-						//Console.WriteLine("Tree " + y + ", " + x + " is NOT visible from the left. Total: " + visibleTrees.Count);
 					}
 				}
 			}
@@ -65,18 +53,8 @@ namespace AdventOfCode2022
 				{
 					if (trees[y, x] > currentHeight)
 					{
-						if (!visibleTrees.Contains("Tree " + y + x))
-						{
-							visibleTrees.Add("Tree " + y + x);
-							Console.WriteLine("Tree " + y + ", " + x + " is visible");
-						}
-
-						Console.WriteLine("Tree " + y + ", " + x + " is visible from the right. Total: " + visibleTrees.Count);
+						visibleTrees[y, x] = true;
 						currentHeight = trees[y, x];
-					}
-					else
-					{
-						Console.WriteLine("Tree " + y + ", " + x + " is NOT visible from the right. Total: " + visibleTrees.Count);
 					}
 				}
 			}
@@ -91,17 +69,8 @@ namespace AdventOfCode2022
 				{
 					if (trees[y, x] > currentHeight)
 					{
-						if (!visibleTrees.Contains("Tree " + y + x))
-						{
-							visibleTrees.Add("Tree " + y + x);
-							Console.WriteLine("Tree " + y + ", " + x + " is visible");
-						}
-						//Console.WriteLine("Tree " + y + ", " + x + " is visible from the top. Total: " + visibleTrees.Count);
+						visibleTrees[y, x] = true;
 						currentHeight = trees[y, x];
-					}
-					else
-					{
-						//Console.WriteLine("Tree " + y + ", " + x + " is NOT visible from the top. Total: " + visibleTrees.Count);
 					}
 				}
 			}
@@ -113,24 +82,144 @@ namespace AdventOfCode2022
 				{
 					if (trees[y, x] > currentHeight)
 					{
-						if (!visibleTrees.Contains("Tree " + y + x))
-						{
-							visibleTrees.Add("Tree " + y + x);
-							Console.WriteLine("Tree " + y + ", " + x + " is visible");
-						}
-						//Console.WriteLine("Tree " + y + ", " + x + " is visible from the bottom. Total: " + visibleTrees.Count);
+						visibleTrees[y, x] = true;
 						currentHeight = trees[y, x];
-					}
-					else
-					{
-						//Console.WriteLine("Tree " + y + ", " + x + " is NOT visible from the bottom. Total: " + visibleTrees.Count);
 					}
 				}
 			}
 
-			Console.WriteLine("Trees Visible: " + visibleTrees.Count);
+			int visible = 0;
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+
+					Console.Write(visibleTrees[x, y] ? '▓' : '░');
+
+					if (visibleTrees[x, y]) visible++;
+				}
+				Console.Write("\n");
+			}
+
+			Console.WriteLine("Trees Visible: " + visible);
 		}
 
+		public static void CalculateTreeVisibility()
+		{
+			Console.WriteLine("Reading input file.");
 
+			string[] input = File.ReadAllLines(inputFile);
+
+			var height = input.Length;
+			var width = input[0].Length;
+
+			// build array
+			int[,] trees = new int[height, width];
+			int[,] scenicScore = new int[height, width];
+			bool[,] visibleTrees = new bool[height, width];
+			for (int i = 0; i < input.Length; i++)
+			{
+				for (int j = 0; j < input[i].Length; j++)
+				{
+					trees[i, j] = int.Parse("" + input[i][j]);
+				}
+			}
+
+
+			int highestScore = 0;
+			// go through trees 
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					scenicScore[y, x] = FindScenicScoreForTree(x, y, width, height, trees);
+					Console.Write(scenicScore[y, x]);
+					if (scenicScore[y,x] > highestScore)
+					{
+						highestScore = scenicScore[y, x];
+					}
+				}
+				Console.Write("\n");
+			}
+
+			Console.WriteLine("Best Score: " + highestScore);
+		}
+
+		private static int FindScenicScoreForTree(int x_pos, int y_pos, int width, int height, int[,] trees)
+		{
+			var treeHeight =trees[y_pos, x_pos];
+
+			int scenicScore = 0;
+			int runningScore = 0;
+
+			// look up
+			for(int y = y_pos-1; y >= 0; y--)
+			{
+				if(trees[y, x_pos] < treeHeight)
+				{
+					runningScore++;
+				}
+				else
+				{
+					runningScore++;
+					break;
+				}
+			}
+
+			scenicScore += runningScore;
+			runningScore = 0;
+
+
+			// look down
+			for (int y = y_pos+1; y < height; y++)
+			{
+				if (trees[y, x_pos] < treeHeight)
+				{
+					runningScore++;
+				}
+				else
+				{
+					runningScore++;
+					break;
+				}
+			}
+
+			scenicScore *= runningScore;
+			runningScore = 0;
+
+			// look left 
+			for (int x = x_pos-1; x >= 0; x--)
+			{
+				if (trees[y_pos, x] < treeHeight)
+				{
+					runningScore++;
+				}
+				else
+				{
+					runningScore++;
+					break;
+				}
+			}
+
+			scenicScore *= runningScore;
+			runningScore = 0;
+
+			// look right
+			for (int x = x_pos+1; x < width; x++)
+			{
+				if (trees[y_pos, x] < treeHeight)
+				{
+					runningScore++;
+				}
+				else
+				{
+					runningScore++;
+					break;
+				}
+			}
+			scenicScore *= runningScore;
+
+			return scenicScore;
+		}
 	}
 }

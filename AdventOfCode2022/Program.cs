@@ -69,6 +69,7 @@ namespace AdventOfCode2022
 						case 8:
 							Console.WriteLine("Day 8: Trees. Running Now!");
 							TreeVisibility.CalculateVisibility();
+							TreeVisibility.CalculateTreeVisibility();
 							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
