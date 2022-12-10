@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RockPaperScissors.cs" />
     <Compile Include="Rucksacks.cs" />
+    <Compile Include="SignalStrengthCalculator.cs" />
     <Compile Include="TreeVisibility.cs" />
   </ItemGroup>
   <ItemGroup>

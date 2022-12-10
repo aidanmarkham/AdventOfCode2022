@@ -71,6 +71,11 @@ namespace AdventOfCode2022
 							TreeVisibility.CalculateVisibility();
 							TreeVisibility.CalculateTreeVisibility();
 							break;
+						case 10:
+							Console.WriteLine("Day 10: Signals. Running Now!");
+							SignalStrengthCalculator.CalculateSignalStrength();
+							SignalStrengthCalculator.RenderSignal();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
