@@ -56,14 +56,13 @@ namespace AdventOfCode2022
 				}
 			}
 
-			for (int t = 0; t < 10000; t++)
+			for (int t = 0; t < 20; t++)
 			{
 				for (int i = 0; i < monkeys.Count; i++)
 				{
 					// inpect items
 					for (int j = 0; j < monkeys[i].Items.Count; j++)
 					{
-
 						// do inspect the item
 						double val = monkeys[i].Operation[4] == "old" ? monkeys[i].Items[j] : double.Parse(monkeys[i].Operation[4]);
 
@@ -79,7 +78,7 @@ namespace AdventOfCode2022
 						}
 
 						// apply worry adjustment strategy
-						monkeys[i].Items[j] /= 3;
+						monkeys[i].Items[j] = Math.Floor(monkeys[i].Items[j] / 3);
 
 						if (monkeys[i].Items[j] % monkeys[i].Divisor == 0)
 						{

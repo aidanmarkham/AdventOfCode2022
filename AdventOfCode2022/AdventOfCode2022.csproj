@@ -48,11 +48,12 @@
     <Compile Include="ContainedPairs.cs" />
     <Compile Include="CrateStacks.cs" />
     <Compile Include="DataStream.cs" />
-    <Compile Include="Day11.cs" />
+    <Compile Include="MonkeyInTheMiddle.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RockPaperScissors.cs" />
+    <Compile Include="Rope.cs" />
     <Compile Include="Rucksacks.cs" />
     <Compile Include="SignalStrengthCalculator.cs" />
     <Compile Include="TreeVisibility.cs" />
