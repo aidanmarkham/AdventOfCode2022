@@ -43,10 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="2021.cs" />
     <Compile Include="CalorieCounter.cs" />
     <Compile Include="ContainedPairs.cs" />
     <Compile Include="CrateStacks.cs" />
     <Compile Include="DataStream.cs" />
+    <Compile Include="Day11.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

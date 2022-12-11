@@ -76,6 +76,16 @@ namespace AdventOfCode2022
 							SignalStrengthCalculator.CalculateSignalStrength();
 							SignalStrengthCalculator.RenderSignal();
 							break;
+						case 11:
+							Console.WriteLine("Day 11: Running Now!");
+							MonkeyInTheMiddle.Solve();
+							MonkeyInTheMiddle.Solve2();
+							break;
+						case 2021:
+							Console.WriteLine("Year 2021: Running Now!");
+							Advent2021.SonarSweep();
+							Advent2021.SonarSweepAvg();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
