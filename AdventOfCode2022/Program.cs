@@ -71,6 +71,10 @@ namespace AdventOfCode2022
 							TreeVisibility.CalculateVisibility();
 							TreeVisibility.CalculateTreeVisibility();
 							break;
+						case 9:
+							Console.WriteLine("Day 9: ---. Running Now!");
+							Rope.CalculateRope();
+							break;
 						default:
 							Console.WriteLine("Sorry, I didn't get that. Try again?");
 							break;
