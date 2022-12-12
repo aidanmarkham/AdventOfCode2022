@@ -87,6 +87,11 @@ namespace AdventOfCode2022
 							Console.WriteLine("\nPt. 2");
 							MonkeyInTheMiddle.Solve2();
 							break;
+						case 12:
+							Console.WriteLine("Day 12: Running Now!");
+							Day12.Solve();
+							Day12.Solve2();
+							break;
 						case 2021:
 							Console.WriteLine("Year 2021: Running Now!");
 							Advent2021.SonarSweep();

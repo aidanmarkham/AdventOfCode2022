@@ -48,6 +48,7 @@
     <Compile Include="ContainedPairs.cs" />
     <Compile Include="CrateStacks.cs" />
     <Compile Include="DataStream.cs" />
+    <Compile Include="Day12.cs" />
     <Compile Include="MonkeyInTheMiddle.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Program.cs" />
