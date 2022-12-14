@@ -72,11 +72,33 @@ namespace AdventOfCode2022
 					}
 				} 
 			}
+
+			
 			Console.WriteLine("Lowest: " + lowest);
 
 
 		}
 
+		private static void DrawPath()
+		{
+			/*
+			for (int y = 0; y < map.GetLength(1); y++)
+			{
+				for (int x = 0; x < map.GetLength(0); x++)
+				{
+					if (steps.Contains((x, y)))
+					{
+						Console.Write("░");
+					}
+					else
+					{
+						Console.Write(map[x, y]);
+					}
+				}
+				Console.Write("\n");
+			}
+			*/
+		}
 		private static void ClearFlooded(int[,] flooded, (int, int) startPos)
 		{
 			for (int y = 0; y < flooded.GetLength(1); y++)

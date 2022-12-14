@@ -92,6 +92,12 @@ namespace AdventOfCode2022
 							Day12.Solve();
 							Day12.Solve2();
 							break;
+						case 13:
+							Day13.Solve();
+							break;
+						case 14:
+							Day14.Solve();
+							break;
 						case 2021:
 							Console.WriteLine("Year 2021: Running Now!");
 							Advent2021.SonarSweep();
