@@ -98,21 +98,16 @@ namespace AdventOfCode2022
 				}
 			}
 
-			List<int> finishers = new List<int>();
 			int bestFinisher = 0;
 			string bestHistory = "";
 
-			Recurse(startValve, distances, ref bestFinisher, ref bestHistory, "","", 0, timeLimit, closedValves, finishers);
-
-			finishers.OrderBy(o => o);
-
-			Console.WriteLine("Best Finisher from list: " + finishers[finishers.Count - 1]);
+			Recurse(startValve, distances, ref bestFinisher, ref bestHistory, "","", 0, timeLimit, closedValves);
 
 			Console.WriteLine(bestHistory);
 			Console.WriteLine("Best Finisher: " + bestFinisher);
 		}
 
-		public static void Recurse(Valve current, Dictionary<Valve, Dictionary<Valve, int>> distances, ref int bestFinisher, ref string bestHistory, string opened, string history, int pressure, int remainingTime, List<Valve> closedValves, List<int> finishers)
+		public static void Recurse(Valve current, Dictionary<Valve, Dictionary<Valve, int>> distances, ref int bestFinisher, ref string bestHistory, string opened, string history, int pressure, int remainingTime, List<Valve> closedValves)
 		{
 			// keep track of history
 			history += "\n=== Minute " + (timeLimit  + 1 - remainingTime) + " ===\n";
@@ -134,30 +129,14 @@ namespace AdventOfCode2022
 				// record us as the best finisher if we are
 				if (pressure > bestFinisher)
 				{
-					finishers.Add(pressure);
 					bestFinisher = pressure;
 					bestHistory = history + "\nOut of valves";
 				}
 			}
-			// there's valves still open, we're at a valve that would release pressure, and we havn't opened it before
-			else if (closedValves.Contains(current) && !opened.Contains(current.name))
-			{
-				// add ourself to the list of opened valves
-				opened += " " + current.name;
-
-				// add all the pressure this will release for the remaining time
-				pressure += current.flowRate * (remainingTime-1);
-
-				// record it for the final log out 
-				history += "Staying here to open valve\n";
-
-				// recurse again from here 
-				Recurse(current, distances, ref bestFinisher, ref bestHistory, opened, history, pressure, remainingTime - 1, closedValves, finishers);
-			}
-			// there's valves still open, but we're not at a valve we can or should open
+			// travel to a valve and open it 
 			else
 			{
-				// go through the valves worth opening
+				// pick the valve
 				for (int i = 0; i < closedValves.Count; i++)
 				{
 					// don't do anything if it's opened already
@@ -172,7 +151,6 @@ namespace AdventOfCode2022
 						// we're done so see if we've done better then the previous best 
 						if (pressure > bestFinisher)
 						{
-							finishers.Add(pressure);
 							bestFinisher = pressure;
 							bestHistory = history + "\nOut of time while traveling " + dist + " units to " + closedValves[i];
 						}
@@ -180,7 +158,15 @@ namespace AdventOfCode2022
 					// if we can make it go ahead and recurse
 					else
 					{
-						Recurse(closedValves[i], distances, ref bestFinisher, ref bestHistory, opened, history, pressure, remainingTime - dist, closedValves, finishers);
+						var newRemainingTime = remainingTime;
+
+						// subtract the time it takes to walk
+						newRemainingTime -= dist;
+
+						// subtract the time it takes to open it 
+						newRemainingTime -= 1;
+
+						Recurse(closedValves[i], distances, ref bestFinisher, ref bestHistory, opened + " " + closedValves[i].name, history, pressure + (closedValves[i].flowRate * newRemainingTime), newRemainingTime, closedValves);
 					}
 				}
 			}
