@@ -119,20 +119,6 @@ namespace AdventOfCode2022
 			history += "At Node " + current.name + "\n";
 			history += "Pressure " + pressure + "\n";
 
-			/*
-			// we're out of time! 
-			if (remainingTime == 0)
-			{
-				if (pressure > bestFinisher)
-				{
-					finishers.Add(pressure);
-					bestFinisher = pressure;
-					bestHistory = history + "\nOut of time ";
-				}
-				return;
-			}
-			*/
-
 			// find closed valves still to open
 			int left = closedValves.Count; ;
 			for (int i = 0; i < closedValves.Count; i++)
@@ -152,7 +138,6 @@ namespace AdventOfCode2022
 					bestFinisher = pressure;
 					bestHistory = history + "\nOut of valves";
 				}
-				return;
 			}
 			// there's valves still open, we're at a valve that would release pressure, and we havn't opened it before
 			else if (closedValves.Contains(current) && !opened.Contains(current.name))
@@ -191,7 +176,6 @@ namespace AdventOfCode2022
 							bestFinisher = pressure;
 							bestHistory = history + "\nOut of time while traveling " + dist + " units to " + closedValves[i];
 						}
-						return;
 					}
 					// if we can make it go ahead and recurse
 					else
