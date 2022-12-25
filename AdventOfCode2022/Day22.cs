@@ -24,17 +24,17 @@ namespace AdventOfCode2022
 			}
 
 			// create the map 
-			char[,] map = new char[longest, input.Length - 2];
+			char[,] largeMap = new char[longest, input.Length - 2];
 
 			// get the steps string
 			string stepString = input[input.Length - 1];
 
 			// empty the map
-			for (int y = 0; y < map.GetLength(1); y++)
+			for (int y = 0; y < largeMap.GetLength(1); y++)
 			{
-				for (int x = 0; x < map.GetLength(0); x++)
+				for (int x = 0; x < largeMap.GetLength(0); x++)
 				{
-					map[x, y] = ' ';
+					largeMap[x, y] = ' ';
 				}
 			}
 
@@ -43,24 +43,80 @@ namespace AdventOfCode2022
 			{
 				for (int j = 0; j < input[i].Length; j++)
 				{
-					map[j, i] = input[i][j];
+					largeMap[j, i] = input[i][j];
 				}
 			}
+
+			// create maptiles
+			List<MapTile> tiles = new List<MapTile>();
+			int width = largeMap.GetLength(0) / 4;
+			int height = largeMap.GetLength(1) / 3;
+
+			var one = new MapTile(width * 2, 0, width, height);
+			var two = new MapTile(0, height, width, height); //2
+			var three = new MapTile(width, height, width, height); //3
+			var four = new MapTile(width * 2, height, width, height); //4
+			var five = new MapTile(width * 2, height * 2, width, height); //5
+			var six = new MapTile(width * 3, height * 2, width, height); //6
+
+			one.name = "one";
+			one.up = five;
+			one.down = four;
+			one.left = one;
+			one.right = one;
+
+			two.name = "two";
+			two.up = two;
+			two.down = two;
+			two.left = four;
+			two.right = three;
+
+			three.name = "three";
+			three.up = three;
+			three.down = three;
+			three.left = two;
+			three.right = four;
+
+			four.name = "four";
+			four.up = one;
+			four.down = five;
+			four.left = three;
+			four.right = two;
+
+			five.name = "five";
+			five.up = four;
+			five.down = one;
+			five.left = six;
+			five.right = six;
+
+			six.name = "six";
+			six.up = six;
+			six.down = six;
+			six.left = five;
+			six.right = five;
+
+			tiles.Add(one);
+			tiles.Add(two);
+			tiles.Add(three);
+			tiles.Add(four);
+			tiles.Add(five);
+			tiles.Add(six);
 
 			// find the starting location 
 			(int x, int y) startingLocation = (0, 0);
 
 			// 0R, 1D, 2L, 3U
 			int direction = 0;
-			for (int i = 0; i < map.GetLength(0); i++)
+			for (int i = 0; i < largeMap.GetLength(0); i++)
 			{
-				if (map[i, 0] == '.')
+				if (largeMap[i, 0] == '.')
 				{
 					startingLocation = (i, 0);
 					break;
 				}
 			}
 
+			// ========= build list of steps ===================
 			List<string> steps = new List<string>();
 			string currentStep = "";
 			for (int i = 0; i < stepString.Length; i++)
@@ -83,6 +139,7 @@ namespace AdventOfCode2022
 			positions.Add(startingLocation);
 
 			var currentPos = startingLocation;
+			var currentTile = one;
 			for (int i = 0; i < steps.Count; i++)
 			{
 				// let's walk
@@ -92,6 +149,8 @@ namespace AdventOfCode2022
 					{
 						// tryMove
 						var nextPos = currentPos;
+						var nextTile = currentTile;
+
 						switch (direction)
 						{
 							case 0:
@@ -109,100 +168,41 @@ namespace AdventOfCode2022
 						}
 
 						// ====== loop around map edges =========
-						// we're off the left edge
-						if (nextPos.x < 0)
+
+						if (!currentTile.Contains(nextPos))
 						{
-							nextPos.x = map.GetLength(0) - 1;
-						}
-						// we're off the right edge
-						if (nextPos.x >= map.GetLength(0))
-						{
-							nextPos.x = 0;
-						}
-						// we're off the top edge
-						if (nextPos.y < 0)
-						{
-							nextPos.y = map.GetLength(1) - 1;
-						}
-						// we're off the bottom edge 
-						if (nextPos.y >= map.GetLength(1))
-						{
-							nextPos.y = 0;
+							switch (direction)
+							{
+								case 0:
+									nextTile = currentTile.right;
+									break;
+								case 1:
+									nextTile = currentTile.down;
+									break;
+								case 2:
+									nextTile = currentTile.left;
+									break;
+								case 3:
+									nextTile = currentTile.up;
+									break;
+							}
+							// transform position into new tile space
+							nextPos = MapTile.TransformPoint(direction, nextPos, currentTile, nextTile);
 						}
 
 						// sample map
-						var mapChar = map[nextPos.x, nextPos.y];
-						switch (mapChar)
+						var mapChar = largeMap[nextPos.x, nextPos.y];
+						if (mapChar == '#')
 						{
-							case ' ': // void
-								var loopPos = nextPos;
-								// nextPos is always next to current pos, so if we go until we hit current, we'll know we've looped around
-								bool found = false;
-								while (loopPos != currentPos && !found)
-								{
-									// move in direction
-									switch (direction)
-									{
-										case 0:
-											loopPos.x++;
-											break;
-										case 1:
-											loopPos.y++;
-											break;
-										case 2:
-											loopPos.x--;
-											break;
-										case 3:
-											loopPos.y--;
-											break;
-									}
-
-									// ====== loop around map edges =========
-									// we're off the left edge
-									if (loopPos.x < 0)
-									{
-										loopPos.x = map.GetLength(0) - 1;
-									}
-									// we're off the right edge
-									if (loopPos.x >= map.GetLength(0))
-									{
-										loopPos.x = 0;
-									}
-									// we're off the top edge
-									if (loopPos.y < 0)
-									{
-										loopPos.y = map.GetLength(1) - 1;
-									}
-									// we're off the bottom edge 
-									if (loopPos.y >= map.GetLength(1))
-									{
-										loopPos.y = 0;
-									}
-
-									var loopMapChar = map[loopPos.x, loopPos.y];
-									switch (loopMapChar)
-									{
-										case '.': // open space
-											nextPos = loopPos;
-											found = true;
-											break;
-										case '#': // wall
-											nextPos = currentPos;
-											found = true;
-											break;
-									}
-								}
-								break;
-							case '.': // open space
-									  // do nothing, just move babey
-								break;
-							case '#': // wall
-									  // don't move if it would go into the wall 
-								nextPos = currentPos;
-								break;
+							nextPos = currentPos;
+							nextTile = currentTile;
 						}
+
 						currentPos = nextPos;
+						currentTile = nextTile;
 						positions.Add(currentPos);
+
+						DrawMap(largeMap, positions, tiles);
 					}
 				}
 				else
@@ -227,8 +227,7 @@ namespace AdventOfCode2022
 				}
 			}
 
-
-			DrawMap(map, positions);
+			DrawMap(largeMap, positions, tiles);
 
 			int row = currentPos.y + 1;
 			int column = currentPos.x + 1;
@@ -238,7 +237,7 @@ namespace AdventOfCode2022
 			Console.WriteLine("Password: " + password);
 		}
 
-		static void DrawMap(char[,] map, List<(int x, int y)> positions)
+		static void DrawMap(char[,] map, List<(int x, int y)> positions, List<MapTile> tiles)
 		{
 			// display the map 
 			for (int y = 0; y < map.GetLength(1); y++)
@@ -252,40 +251,94 @@ namespace AdventOfCode2022
 					}
 					else
 					{
-						string face = GetFace(map, (x, y)).ToString();
-						Console.Write(face != "0" ? face : " ");
+
+						bool drawn = false;
+						for (int i = 0; i < tiles.Count; i++)
+						{
+							if (tiles[i].Contains((x, y)))
+							{
+								drawn = true;
+								Console.Write(i + 1);
+							}
+						}
+						if (!drawn) { Console.Write(map[x, y]); }
 
 					}
 				}
 				Console.Write("\n");
 			}
+			Console.Write("\n");
 		}
 
-		static int GetFace(char[,] map, (int x, int y) pos)
+		class MapTile
 		{
-			int hQuad = map.GetLength(1) / 3;
-			int wQuad = map.GetLength(0) / 4;
+			public (int x, int y, int width, int height) rect;
 
-			int x = pos.x;
-			int y = pos.y;
-
-			var xQuad = x / wQuad;
-			var yQuad = y / hQuad;
-
-			if (yQuad == 0)
+			public MapTile(int x, int y, int width, int height)
 			{
-				return xQuad == 2 ? 1 : 0;
+				rect.x = x;
+				rect.y = y;
+				rect.width = width;
+				rect.height = height;
 			}
-			else if (yQuad == 1)
-			{
-				return xQuad + 2 < 5 ? xQuad + 2 : 0;
-			}
-			else if (yQuad == 2)
-			{
-				return xQuad + 3 > 4 ? xQuad + 3 : 0;
-			}
+			public string name;
+			public MapTile up;
+			public MapTile down;
+			public MapTile left;
+			public MapTile right;
 
-			return 0;
+			public bool Contains((int x, int y) pos)
+			{
+				return pos.x >= rect.x && pos.x < rect.x + rect.width && pos.y >= rect.y && pos.y < rect.y + rect.height;
+			}
+			public override string ToString()
+			{
+				return name;
+			}
+			public static (int x, int y) TransformPoint(int goingDir, (int x, int y) pos, MapTile current, MapTile next)
+			{
+				// calculate comingDir
+				int comingDir = -1;
+				if (next.left == current) comingDir = 0;
+				if (next.up == current) comingDir = 1;
+				if (next.right == current) comingDir = 2;
+				if (next.down == current) comingDir = 3;
+
+				// verify connection
+				if (comingDir == -1)
+				{
+					Console.WriteLine("Next isn't connected to Current!");
+					return (0, 0);
+				}
+
+				// transform position to tile space
+				var cPos = pos;
+				cPos.x -= current.rect.x;
+				cPos.y -= current.rect.y;
+
+				// transform by the direction in tile space
+				switch (goingDir)
+				{
+					case 0:
+						cPos.x -= current.rect.width;
+						break;
+					case 1:
+						cPos.y -= current.rect.height;
+						break;
+					case 2:
+						cPos.x += current.rect.width;
+						break;
+					case 3:
+						cPos.y += current.rect.height;
+						break;
+				}
+
+				// transform that postion back to world space
+				var nPos = cPos;
+				nPos.x += next.rect.x;
+				nPos.y += next.rect.y;
+				return nPos;
+			}
 		}
 	}
 }
