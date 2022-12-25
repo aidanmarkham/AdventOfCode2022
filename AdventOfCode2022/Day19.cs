@@ -9,9 +9,9 @@ namespace AdventOfCode2022
 {
 	class Day19
 	{
-		public static string inputFile = "robots.txt";
+		public static string inputFile = "robots_test.txt";
 
-		public static int totalTime = 32;
+		public static int totalTime = 24;
 		public static void Solve()
 		{
 			// read in input 
@@ -85,6 +85,7 @@ namespace AdventOfCode2022
 
 					// if we don't buy anything
 					State nextState = new State(state);
+					nextState.history += "\n Waited.";
 					if (ShouldIterate(nextState, mostGeo, blueprint))
 					{
 						states.Push(nextState);
@@ -106,7 +107,7 @@ namespace AdventOfCode2022
 
 						// pay for it in ore
 						nextState.ore -= blueprint.clayBotCost;
-
+						nextState.history += "\n clay bot.";
 						if (ShouldIterate(nextState, mostGeo, blueprint))
 						{
 							states.Push(nextState);
@@ -122,7 +123,7 @@ namespace AdventOfCode2022
 
 						// lower the ore count 
 						nextState.ore -= blueprint.oreBotCost;
-
+						nextState.history += "\n ore bot.";
 						if (ShouldIterate(nextState, mostGeo, blueprint))
 						{
 							states.Push(nextState);
@@ -139,7 +140,7 @@ namespace AdventOfCode2022
 						// pay for it in ore and clay
 						nextState.ore -= blueprint.obsBotOreCost;
 						nextState.clay -= blueprint.obsBotClayCost;
-
+						nextState.history += "\n obs bot.";
 						if (ShouldIterate(nextState, mostGeo, blueprint))
 						{
 							states.Push(nextState);
@@ -156,7 +157,7 @@ namespace AdventOfCode2022
 						// pay for it in ore and obsidian
 						nextState.ore -= blueprint.geoBotOreCost;
 						nextState.obs -= blueprint.geoBotObsCost;
-
+						nextState.history += "\n geo bot.";
 						if (ShouldIterate(nextState, mostGeo, blueprint))
 						{
 							states.Push(nextState);
@@ -165,7 +166,7 @@ namespace AdventOfCode2022
 				}
 
 				var thisQuality = best.geo;
-				Console.WriteLine("Blueprint " + (i+1) + " quality: " + thisQuality);
+				Console.WriteLine("Blueprint " + (i+1) + " quality: " + thisQuality + best.history);
 				if(totalQuality == 0)
 				{
 					totalQuality += thisQuality;
@@ -208,6 +209,9 @@ namespace AdventOfCode2022
 			public int clay;
 			public int obs;
 			public int geo;
+
+			public string history;
+
 			public State(State state) : this()
 			{
 				timeRemaining = state.timeRemaining - 1;
@@ -221,6 +225,7 @@ namespace AdventOfCode2022
 				clay = state.clay + state.clayBots;
 				obs = state.obs + state.obsBots;
 				geo = state.geo + state.geoBots;
+				history = state.history;
 			}
 		}
 
