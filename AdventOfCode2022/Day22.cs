@@ -9,7 +9,7 @@ namespace AdventOfCode2022
 {
 	class Day22
 	{
-		public static string inputFile = "path_test.txt";
+		public static string inputFile = "path.txt";
 
 		public static void Solve()
 		{
@@ -272,51 +272,51 @@ namespace AdventOfCode2022
 
 			// create maptiles
 			List<MapTile> tiles = new List<MapTile>();
-			int width = largeMap.GetLength(0) / 4;
-			int height = largeMap.GetLength(1) / 3;
+			int width = largeMap.GetLength(0) / 3;
+			int height = largeMap.GetLength(1) / 4;
 
-			var one = new MapTile(width * 2, 0, width, height);
-			var two = new MapTile(0, height, width, height); //2
+			var one = new MapTile(width, 0, width, height);
+			var two = new MapTile(width * 2, 0, width, height); //2
 			var three = new MapTile(width, height, width, height); //3
-			var four = new MapTile(width * 2, height, width, height); //4
-			var five = new MapTile(width * 2, height * 2, width, height); //5
-			var six = new MapTile(width * 3, height * 2, width, height); //6
+			var four = new MapTile(0, height * 2, width, height); //4
+			var five = new MapTile(width, height * 2, width, height); //5
+			var six = new MapTile(0, height * 3, width, height); //6
 
 			one.name = "one";
-			one.up = two;
-			one.down = four;
-			one.left = three;
-			one.right = six;
+			one.up = six;
+			one.down = three;
+			one.left = four;
+			one.right = two;
 
 			two.name = "two";
-			two.up = one;
-			two.down = five;
-			two.left = six;
-			two.right = three;
+			two.up = six;
+			two.down = three;
+			two.left = one;
+			two.right = five;
 
 			three.name = "three";
 			three.up = one;
 			three.down = five;
-			three.left = two;
-			three.right = four;
+			three.left = four;
+			three.right = two;
 
 			four.name = "four";
-			four.up = one;
-			four.down = five;
-			four.left = three;
-			four.right = six;
+			four.up = three;
+			four.down = six;
+			four.left = one;
+			four.right = five;
 
 			five.name = "five";
-			five.up = four;
-			five.down = two;
-			five.left = three;
-			five.right = six;
+			five.up = three;
+			five.down = six;
+			five.left = four;
+			five.right = two;
 
 			six.name = "six";
 			six.up = four;
 			six.down = two;
-			six.left = five;
-			six.right = one;
+			six.left = one;
+			six.right = five;
 
 			tiles.Add(one);
 			tiles.Add(two);
@@ -456,7 +456,7 @@ namespace AdventOfCode2022
 					}
 				}
 
-				DrawMap(largeMap, positions, tiles);
+				//DrawMap(largeMap, positions, tiles);
 			}
 
 			DrawMap(largeMap, positions, tiles);
@@ -470,7 +470,7 @@ namespace AdventOfCode2022
 		}
 
 
-		static void DrawMap(char[,] map, List<(int x, int y)> positions, List<MapTile> tiles)
+		static void DrawMap(char[,] map, List<(int x, int y)> positions, List<MapTile> tiles, bool drawSides = false)
 		{
 			// display the map 
 			for (int y = 0; y < map.GetLength(1); y++)
@@ -484,9 +484,23 @@ namespace AdventOfCode2022
 					}
 					else
 					{
-
-						Console.Write(map[x, y]);
-
+						if (drawSides)
+						{
+							bool drawn = false;
+							for (int i = 0; i < tiles.Count; i++)
+							{
+								if (tiles[i].Contains((x, y)))
+								{
+									drawn = true;
+									Console.Write(i + 1);
+								}
+							}
+							if (!drawn) { Console.Write(map[x, y]); }
+						}
+						else
+						{
+							Console.Write(map[x, y]);
+						}
 					}
 				}
 				Console.Write("\n");
