@@ -121,7 +121,7 @@ namespace AdventOfCode2022
 							Day21.Solve();
 							break;
 						case 22:
-							Day22.Solve();
+							Day22.Solve2();
 							break;
 						case 2021:
 							Console.WriteLine("Year 2021: Running Now!");
