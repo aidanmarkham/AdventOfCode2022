@@ -17,7 +17,7 @@ namespace AdventOfCode2022
 			#region Loading
 			var input = File.ReadAllLines(inputFile);
 
-			List<(int x, int y)> elves = new List<(int x, int y)>();
+			HashSet<(int x, int y)> elves = new HashSet<(int x, int y)>();
 
 			for (int x = 0; x < input.Length; x++)
 			{
@@ -43,7 +43,7 @@ namespace AdventOfCode2022
 
 			bool moving = true;
 			int round = 0;
-			while(moving)
+			while (moving)
 			{
 				round++;
 
@@ -53,18 +53,18 @@ namespace AdventOfCode2022
 				// key: elf, value: proposed spot
 				Dictionary<(int x, int y), (int x, int y)> elfPropMap = new Dictionary<(int x, int y), (int x, int y)>();
 
-				// first half: propose moves
-				for (int i = 0; i < elves.Count; i++)
+				foreach (var elf in elves)
 				{
+
 					// this elf isn't alone, so it should propose a move
-					if (HasNeighbor(elves[i], elves))
+					if (HasNeighbor(elf, elves))
 					{
 						for (int d = 0; d < directions.Count; d++)
 						{
 							// this direction is clear
-							if (CheckDir(directions[d], elves[i], elves))
+							if (CheckDir(directions[d], elf, elves))
 							{
-								var proposed = elves[i];
+								var proposed = elf;
 								switch (directions[d])
 								{
 									case 'N':
@@ -85,16 +85,16 @@ namespace AdventOfCode2022
 								// build proposals
 								if (proposals.ContainsKey(proposed))
 								{
-									proposals[proposed].Add(elves[i]);
+									proposals[proposed].Add(elf);
 								}
 								else
 								{
 									proposals.Add(proposed, new List<(int x, int y)>());
-									proposals[proposed].Add(elves[i]);
+									proposals[proposed].Add(elf);
 								}
 
 								// add this to the elf / proposed map for later retrieval
-								elfPropMap.Add(elves[i], proposed);
+								elfPropMap.Add(elf, proposed);
 
 								break;
 							}
@@ -115,19 +115,27 @@ namespace AdventOfCode2022
 
 				int moveCount = 0;
 				// second half (make moves)
-				for (int i = 0; i < elves.Count; i++)
+				// calculate min and max
+				Dictionary<(int x, int y), (int x, int y)> moves = new Dictionary<(int x, int y), (int x, int y)>();
+				foreach (var elf in elves)
 				{
-					if (elfPropMap.ContainsKey(elves[i]))
+					if (elfPropMap.ContainsKey(elf))
 					{
-						var proposed = elfPropMap[elves[i]];
+						var proposed = elfPropMap[elf];
 
 						if (proposals.ContainsKey(proposed) && proposals[proposed].Count == 1)
 						{
 							// move!
-							elves[i] = proposed;
+							moves.Add(elf, proposed);
 							moveCount++;
 						}
 					}
+				}
+
+				foreach(KeyValuePair<(int x, int y), (int x, int y)> move in moves)
+				{
+					elves.Remove(move.Key);
+					elves.Add(move.Value);
 				}
 
 				if (round % 10 == 0)
@@ -154,7 +162,7 @@ namespace AdventOfCode2022
 			Console.WriteLine("Empties: " + CountEmpties(elves));
 		}
 
-		public static bool HasNeighbor((int x, int y) elf, List<(int x, int y)> elves)
+		public static bool HasNeighbor((int x, int y) elf, HashSet<(int x, int y)> elves)
 		{
 			var has = false;
 			if (elves.Contains((elf.x, elf.y - 1))) has = true;
@@ -168,7 +176,7 @@ namespace AdventOfCode2022
 			return has;
 		}
 
-		public static bool CheckDir(char dir, (int x, int y) elf, List<(int x, int y)> elves)
+		public static bool CheckDir(char dir, (int x, int y) elf, HashSet<(int x, int y)> elves)
 		{
 			var clear = true;
 
@@ -199,15 +207,14 @@ namespace AdventOfCode2022
 			return clear;
 		}
 
-		public static void PrintField(List<(int x, int y)> elves, Dictionary<(int x, int y), List<(int x, int y)>> proposals = null, int padding = 2)
+		public static void PrintField(HashSet<(int x, int y)> elves, Dictionary<(int x, int y), List<(int x, int y)>> proposals = null, int padding = 2)
 		{
 			(int x, int y) min = (int.MaxValue, int.MaxValue);
 			(int x, int y) max = (int.MinValue, int.MinValue);
 
 			// calculate min and max
-			for (int i = 0; i < elves.Count; i++)
+			foreach (var e in elves)
 			{
-				var e = elves[i];
 				if (e.x < min.x) min.x = e.x;
 				if (e.x > max.x) max.x = e.x;
 				if (e.y < min.y) min.y = e.y;
@@ -215,12 +222,12 @@ namespace AdventOfCode2022
 			}
 
 			// add padding
-			
+
 			min.x -= padding;
 			min.y -= padding;
 			max.x += padding;
 			max.y += padding;
-			
+
 
 			for (int x = min.x; x <= max.x; x++)
 			{
@@ -245,15 +252,14 @@ namespace AdventOfCode2022
 			Console.Write("\n");
 		}
 
-		public static int CountEmpties(List<(int x, int y)> elves)
+		public static int CountEmpties(HashSet<(int x, int y)> elves)
 		{
 			(int x, int y) min = (int.MaxValue, int.MaxValue);
 			(int x, int y) max = (int.MinValue, int.MinValue);
 
 			// calculate min and max
-			for (int i = 0; i < elves.Count; i++)
+			foreach(var e in elves)
 			{
-				var e = elves[i];
 				if (e.x < min.x) min.x = e.x;
 				if (e.x > max.x) max.x = e.x;
 				if (e.y < min.y) min.y = e.y;
